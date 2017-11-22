@@ -1,3 +1,18 @@
 {
   "url":"https://api.bitfinex.com/v2/candles/trade:"
+  "pairs":[
+    "BTCUSD",
+    "BCHUSD",
+    "DASHUSD",
+    "LTCUSD",
+    "XMRUSD",
+    "ZECUSD",
+    "ETHUSD",
+    "NEOUSD",
+    "OMGUSD",
+    "WAVESUSD",
+    "ARKUSD",
+    "ADAUSD",
+    "QTUMUSD"
+  ]
 }

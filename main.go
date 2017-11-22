@@ -42,7 +42,7 @@ func main() {
 	check(err)
 	fmt.Println(string(cfg))
 	var buf Site
-	err = json.Unmarshal([]byte(jsn), &buf)
+	err = json.Unmarshal([]byte(cfg), &buf)
 	check(err)
 
 	//SQL

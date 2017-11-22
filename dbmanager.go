@@ -10,7 +10,19 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const dbNname = "trading"
+const (
+	dbNname = "trading"
+	candelsTableStruct = `(
+		id INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+		mts BIGINT(20),
+		open FLOAT,
+		close FLOAT,
+		hight FLOAT,
+		low FLOAT,
+		volume FLOAT,
+		ts TIMESTAMP DEFAULT 'CURRENT_TIMESTAMP' NOT NULL
+		);`
+)
 
 var connections = []string{
 	"test",
@@ -55,16 +67,7 @@ func DBConnect() *sql.DB {
 }
 
 func createTables () {
-	_, err := DB.Exec(`CREATE TABLE IF NOT EXISTS trades	(
-		    id INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-		    mts BIGINT(20),
-		    open FLOAT,
-		    close FLOAT,
-		    hight FLOAT,
-		    low FLOAT,
-		    volume FLOAT,
-		    ts TIMESTAMP DEFAULT 'CURRENT_TIMESTAMP' NOT NULL
-		);`)
+	_, err := DB.Exec(`CREATE TABLE IF NOT EXISTS trades` + candelsTableStruct)
 	check(err)
 }
 
