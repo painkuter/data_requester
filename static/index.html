@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script>
+
+        //$.getJSON('https://api.bitfinex.com/v2/candles/trade:5m:tBTCUSD/hist?start=1507106517000&end=1509307200000&limit=500&_=1509738036450', function (data) {
+        $.getJSON('data/BTCUSD', function (data) {
+            // Create the chart
+            Highcharts.stockChart('container', {
+
+
+                rangeSelector: {
+                    selected: 1
+                },
+
+                title: {
+                    text: 'Bitcoin Price'
+                },
+
+                series: [{
+                    name: 'BTCUSD',
+                    data: data,
+                    tooltip: {
+                        valueDecimals: 2
+                    }
+                }]
+            });
+        });
+    </script>
+</head>
+<body>
+Test
+
+
+<div id="container" style="height: 400px; min-width: 310px"></div>
+</body>
+</html>
