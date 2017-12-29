@@ -25,7 +25,7 @@ const (
 )
 
 var connections = []string{
-	"test",
+	//"test",
 	"root:111@tcp(127.0.0.1:3306)/",
 	"root:12345678@tcp(127.0.0.1:3306)/",
 	"root@tcp(127.0.0.1:3306)/",
@@ -74,7 +74,7 @@ func createTables () {
 func shareData(w http.ResponseWriter, r *http.Request) {
 	qb := fmt.Sprintf("SELECT mts, open, close, hight, low, volume FROM %v LIMIT 100", r.URL.Path[len("/data/"):])
 	rows, err := DB.Query(qb)
-	//rows, err := DB.Query("SELECT mts, open, close, hight, low, volume FROM trades")
+	//rows, err := DB.Query("SELECT mts, open, close, high, low, volume FROM trades")
 	check(err)
 	var result [][]float64
 
