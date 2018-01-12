@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"encoding/json"
@@ -7,17 +7,12 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"database/sql"
+	"datarequester/cfg"
 )
 
-const (
-	//delta = 12255925sec
-	appStartTime = 1511036725 //[Seconds] == 2017-11-18T20:25:25+00:00
-	firstPole    = 1498780800 // [Seconds] == 2017-06-30T00:00:00+00:00
 
-	alias = "BTCUSD"
-)
-
-var operationsNeeded = (appStartTime - firstPole) / 60 / 500 //необходимое число запросов
+var operationsNeeded = (cfg.AppStartTime - cfg.FirstPole) / 60 / 500 //needed requests count
 
 type Site struct {
 	Url string `json:"url"`
@@ -36,13 +31,41 @@ type ExchangeStructred struct {
 
 var DB = DBConnect()
 
-func main() {
+func DBConnect() *sql.DB {
+	var (
+		//dbConnect string
+		db  *sql.DB
+		err error
+	)
+
+	for _, el := range cfg.Connections {
+		db, err = sql.Open("mysql", el)
+		//TODO: remove it, just check DB exists
+		result, _ := db.Exec("CREATE DATABASE IF NOT EXISTS " + dbNname)
+		db, err = sql.Open("mysql", el+dbNname)
+		if result != nil {
+			fmt.Println("CONNECTED TO DB-SERVER: " + el)
+			break
+		}
+	}
+	if err != nil {
+		fmt.Println("DB Initialization finished with errors:")
+		panic(err)
+	} else {
+		fmt.Printf("DB Initialization finished successfully [%v]\n", dbNname)
+	}
+	// defer db.Close()
+	return db
+}
+
+
+func Main() {
 	ready := make(chan bool)
-	cfg, err := ioutil.ReadFile("config.json")
+	config, err := ioutil.ReadFile("config/config.json")
 	check(err)
-	fmt.Println(string(cfg))
+	fmt.Println(string(config))
 	var buf Site
-	err = json.Unmarshal([]byte(cfg), &buf)
+	err = json.Unmarshal([]byte(config), &buf)
 	check(err)
 
 	//SQL
@@ -54,7 +77,7 @@ func main() {
 
 	for i := 0; i < 0; i++ {
 		//url := buf.Url + "5m:tBTCUSD/hist?start=1507106517000&end=1509307200000&limit=500&_=1509738036450"
-		endTime := appStartTime - i*30000 //500*60s
+		endTime := cfg.AppStartTime - i*30000 //500*60s
 		startTime := endTime - 30000
 		//check data in DB
 		qb := `SELECT count(1) FROM trades WHERE trades.mts BETWEEN ` + strconv.Itoa(startTime) + "000 AND " + strconv.Itoa(endTime) + "000"
@@ -67,7 +90,7 @@ func main() {
 		check(err)
 		if count >= 500 {continue}
 
-		url := buf.Url + fmt.Sprintf("1m:t%v/hist?start=%v000&end=%v000&limit=500", alias, startTime, endTime)
+		url := buf.Url + fmt.Sprintf("1m:t%v/hist?start=%v000&end=%v000&limit=500", cfg.Alias, startTime, endTime)
 		//
 		fmt.Println(url)
 		resp, err := http.Get(url)

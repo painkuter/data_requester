@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 )
 
 func Test(t *testing.T) {
-	main()
+	Main()
 }
 
 func TestGenerateDelay(t *testing.T) {

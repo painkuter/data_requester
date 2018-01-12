@@ -1,7 +1,6 @@
-package main
+package app
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,7 +10,7 @@ import (
 )
 
 const (
-	dbNname = "trading"
+	dbNname            = "trading"
 	candelsTableStruct = `(
 		id INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 		mts BIGINT(20),
@@ -24,13 +23,7 @@ const (
 		);`
 )
 
-var connections = []string{
-	//"test",
-	"root:111@tcp(127.0.0.1:3306)/",
-	"root:12345678@tcp(127.0.0.1:3306)/",
-	"root@tcp(127.0.0.1:3306)/",
-	"root:111@localhost/",
-}
+
 
 func getMySQL() string {
 	b, err := ioutil.ReadFile("dev/mtest_users.sql") // just pass the file name
@@ -40,33 +33,7 @@ func getMySQL() string {
 	return string(b) // convert content to a 'string'
 }
 
-func DBConnect() *sql.DB {
-	var (
-		//dbConnect string
-		db  *sql.DB
-		err error
-	)
-
-	for _, el := range connections {
-		db, err = sql.Open("mysql", el)
-		result, _ := db.Exec("CREATE DATABASE IF NOT EXISTS " + dbNname)
-		db, err = sql.Open("mysql", el+dbNname)
-		if result != nil {
-			fmt.Println("CONNECTED TO DB-SERVER: " + el)
-			break
-		}
-	}
-	if err != nil {
-		fmt.Println("DB Initialization finished with errors:")
-		panic(err)
-	} else {
-		fmt.Printf("DB Initialization finished successfully [%v]\n", dbNname)
-	}
-	// defer db.Close()
-	return db
-}
-
-func createTables () {
+func createTables() {
 	_, err := DB.Exec(`CREATE TABLE IF NOT EXISTS trades` + candelsTableStruct)
 	check(err)
 }

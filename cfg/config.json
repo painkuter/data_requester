@@ -1,5 +1,5 @@
 {
-  "url":"https://api.bitfinex.com/v2/candles/trade:"
+  "url":"https://api.bitfinex.com/v2/candles/trade:",
   "pairs":[
     "BTCUSD",
     "BCHUSD",

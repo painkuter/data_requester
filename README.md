@@ -19,3 +19,10 @@ Insert to database +
 ==
 
 Remove 000 from timestamp
+
+GLIDE:
+--->https://github.com/Masterminds/glide
+sudo add-apt-repository ppa:masterminds/glide && sudo apt-get update
+sudo apt-get install glide
+glide install (need: glide create, glide update)
+
